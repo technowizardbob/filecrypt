@@ -1,0 +1,4 @@
+Made some minnor tweaks to this program.
+1) To allow for a key file.
+2) To remove folder path info in TAR arachives.
+
