@@ -1,0 +1,28 @@
+--- /home/bobs/code/go/archive_orig.go
++++ /home/bobs/code/go/filecrypt/archive/archive.go
+@@ -10,6 +10,7 @@
+ 	"io"
+ 	"os"
+ 	"path/filepath"
++	"strings"
+ 
+ 	"github.com/kisom/sbuf"
+ )
+@@ -41,11 +42,14 @@
+ 				return errors.New("filecrypt: failed to compress " + path)
+ 			}
+ 
++			full_dir, file := filepath.Split(path)
++			working_dir, _ := filepath.Split(walkPath)
++			filePath := strings.ReplaceAll(full_dir, working_dir, "") + file
++
+ 			if Verbose {
+-				fmt.Println("Pack file", path)
++				fmt.Printf("Pack file: %s, as: %s\n", path, filePath)
+ 			}
+ 
+-			filePath := filepath.Clean(path)
+ 			hdr, err := tar.FileInfoHeader(info, filePath)
+ 			if err != nil {
+ 				return err
+

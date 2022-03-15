@@ -1,0 +1,177 @@
+--- /home/bobs/code/go/filecrypt_orig.go
++++ /home/bobs/code/go/filecrypt/filecrypt.go
+@@ -12,9 +12,10 @@
+ 	"github.com/gokyle/readpass"
+ 	"github.com/kisom/filecrypt/archive"
+ 	"github.com/kisom/filecrypt/crypto"
++	"github.com/kisom/filecrypt/genkey"
+ )
+ 
+-var version = "1.0.0"
++var version = "1.1.5"
+ 
+ func dieIf(err error) {
+ 	if err != nil {
+@@ -44,8 +45,11 @@
+ }
+ 
+ func main() {
++	nopwd := flag.Bool("p", false, "no password")
+ 	help := flag.Bool("h", false, "print a short usage message")
+ 	lower := flag.Bool("l", false, "use the lower scrypt settings")
++	generateKey := flag.String("g", "", "key file")
++	keyfile := flag.String("k", "", "key file")
+ 	out := flag.String("o", "", "output path")
+ 	flag.BoolVar(&quiet, "q", false, "do not print any additional output")
+ 	list := flag.Bool("t", false, "list files")
+@@ -54,6 +58,11 @@
+ 	extract := flag.Bool("x", false, "extract .tgz from archive")
+ 	flag.Parse()
+ 
++	if *generateKey != "" {
++		genkey.MakeKey(*generateKey)
++		return
++	}
++
+ 	if *help || flag.NArg() == 0 {
+ 		usage()
+ 		return
+@@ -81,32 +90,50 @@
+ 	var pass []byte
+ 	var err error
+ 
+-	if !(*unpack || *extract || *list) {
+-		for {
++	if *nopwd {
++		// no password
++		if *keyfile == "" {
++			dieWith("Must use a password, keyfile, or both!")
++		}
++	} else {
++		if !(*unpack || *extract || *list) {
++			for {
++				pass, err = readpass.PasswordPromptBytes("Archive password: ")
++				dieIf(err)
++
++				var confirm []byte
++				confirm, err = readpass.PasswordPromptBytes("Confirm: ")
++				dieIf(err)
++
++				if !bytes.Equal(pass, confirm) {
++					fmt.Println("Passwords don't match.")
++					continue
++				}
++
++				crypto.Zero(confirm)
++				break
++			}
++		} else {
+ 			pass, err = readpass.PasswordPromptBytes("Archive password: ")
+ 			dieIf(err)
+-
+-			var confirm []byte
+-			confirm, err = readpass.PasswordPromptBytes("Confirm: ")
+-			dieIf(err)
+-
+-			if !bytes.Equal(pass, confirm) {
+-				fmt.Println("Passwords don't match.")
+-				continue
+-			}
+-
+-			crypto.Zero(confirm)
+-			break
+-		}
++		}
++	}
++	start := time.Now()
++
++	var new_pass []byte
++	if *keyfile != "" {
++		// Open keyfile for reading
++		file, err := os.Open(*keyfile)
++		dieIf(err)
++		data, err := ioutil.ReadAll(file)
++		new_pass = append(data, pass...)
+ 	} else {
+-		pass, err = readpass.PasswordPromptBytes("Archive password: ")
+-		dieIf(err)
+-	}
+-
+-	start := time.Now()
++		new_pass = pass
++	}
++
+ 	if *unpack || *extract || *list {
+ 		if flag.NArg() != 1 {
+-			dieWith("only one file may unpacked at a time.")
++			dieWith("Only one file may unpacked at a time.")
+ 		}
+ 
+ 		print("Reading encrypted archive...")
+@@ -114,7 +141,7 @@
+ 		dieIf(err)
+ 
+ 		print("Decrypting archive...")
+-		in, err = crypto.Open(pass, in)
++		in, err = crypto.Open(new_pass, in)
+ 		dieIf(err)
+ 
+ 		if *unpack {
+@@ -133,7 +160,7 @@
+ 		dieIf(err)
+ 
+ 		print("Encrypting archive...")
+-		fData, err = crypto.Seal(pass, fData)
++		fData, err = crypto.Seal(new_pass, fData)
+ 		dieIf(err)
+ 
+ 		print("Writing file...")
+@@ -144,15 +171,21 @@
+ 	printf("Completed in %s.\n", time.Since(start))
+ }
+ 
++// Kyle Isom <kyle@tyrfingr.is>
+ func usage() {
+ 	progName := filepath.Base(os.Args[0])
+-	fmt.Printf(`%s version %s, (c) 2015 Kyle Isom <kyle@tyrfingr.is>
+-Released under the ISC license.
++	fmt.Printf(`%s version %s, (c) 2022 Robert Strutts
+ 
+ Usage:
+-%s [-h] [-o filename] [-q] [-t] [-u] [-v] [-x] files...
++%s [-h] [-o filename] [-k] [-q] [-t] [-u] [-v] [-x] files...
+ 
+ 	-h 		Print this help message.
++
++	-p 		Do not use a password.
++
++	-g 		Generate a new key file, specified by given key file.
++
++	-k		Use this keyfile, along with password or none.
+ 
+ 	-o filename	The filename to output. If an archive is being built,
+ 			this is the filename of the archive. If an archive is
+@@ -181,15 +214,17 @@
+ 			not decompress or unpack it.
+ 
+ Examples:
+-	%s -o ssh.enc ~/.ssh
++	%s -o ssh.enc -k ~/.my_fsc.key ~/.ssh
+ 		Encrypt the user's OpenSSH directory to ssh.enc.
+ 
+-	%s -o backup/ -u ssh.enc
++	%s -o backup/ -k ~/.my_fsc.key -u ssh.enc
+ 		Restore the user's OpenSSH directory to the backup/
+ 		directory.
+ 
+-	%s -u ssh.enc
++	%s -u ssh.enc -k ~/.my_fsc.key
+ 		Restore the user's OpenSSH directory to the current directory.
+ 
+-`, progName, version, progName, progName, progName, progName)
+-}
++	%s -g ~/.my_fsc.key
++		Make a new key file to be used later on...	
++`, progName, version, progName, progName, progName, progName, progName)
++}
+

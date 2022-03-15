@@ -1,4 +1,6 @@
-Made some minnor tweaks to this program.
+I (Robert...) made some minnor tweaks to this program.
 1) To allow for a key file.
-2) To remove folder path info in TAR arachives.
+2) To remove folder path info in TAR arachives (as it did not decode 100% of the time for me and was not how I wanted the folders to output anyways).
+
+My changes made are noted in these files: archive_DIFF.patch.log, and filecrypt_DIFF.patch.log
 
