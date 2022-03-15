@@ -133,7 +133,7 @@ Give the Drive a Good Name (like SafeBox or something else cool that makes since
 ```
 ### cd into USB Drive via Open Terminal Here in nautilus or other File Manager or 
 ### ... simply cd /media/$USER/USB_Drive_Volume_Name_HERE
-$ filecrypt -o ssh.enc -k ~/.config/filecrypt/tts.key ~/.ssh/*.Private
+$ filecrypt -o ssh.enc -k ~/.config/filecrypt/tts.key ~/.ssh/*.private
 ### Verify that the file is valid then move on to make a Symbolic link to it:
 $ filecrypt -t -v -k ~/.config/filecrypt/tts.key -u ssh.enc
 $ sudo ln -s /media/$USER/NAME_OF_USB_Drive_to_Mount/ssh.enc /mnt/ssh.enc
@@ -141,9 +141,9 @@ $ sudo ln -s /media/$USER/NAME_OF_USB_Drive_to_Mount/ssh.enc /mnt/ssh.enc
 
 ### Robert's Bash Scripts to mount USB keys into RAM Disk for .ssh Keys to work
 $ sudo cp shell_scripts/*.sh /usr/local/bin/
-### Okay, to make the mkeys work REPLACE Robs.private with your Private KEY file name
+### Okay, to make the mkeys work REPLACE Robs.private with your private KEY file name
 $ ln -s /mnt/ramdisk/Robs.private ~/.ssh/
-### Update your ~/.ssh/config to use the .Private key file, as follows:
+### Update your ~/.ssh/config to use the .private key file, as follows:
 $ nano ~/.ssh/config
 
 ```
