@@ -171,11 +171,10 @@ func main() {
 	printf("Completed in %s.\n", time.Since(start))
 }
 
-// Kyle Isom <kyle@tyrfingr.is>
 func usage() {
 	progName := filepath.Base(os.Args[0])
 	fmt.Printf(`%s version %s, (c) 2022 Robert Strutts
-
+Orignal Author: Kyle Isom <kyle@tyrfingr.is>
 Usage:
 %s [-h] [-o filename] [-k] [-q] [-t] [-u] [-v] [-x] files...
 

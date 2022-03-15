@@ -106,34 +106,42 @@ Examples:
 ```
 
 ## INSTALL
-
+```
 $ cd filecrypt
 $ build go
 $ sudo cp filecrypt /usr/local/bin/
-# Generate a Key File for use with filecrypt passwords
+### Generate a Key File for use with filecrypt passwords
 $ filecrypt -g ~/.config/filecrypt/tts.key
 NOTE: if your key name or path is different then update the mkeys.sh Bash Script...
+```
 
 ### How to Require a USB Stick for SSH Access, if desired to do so, :
 
-# Make a copy of your private keys from id_rsa, id_ecdsa, id_ed25519, etc... into yourName.private or serverName.private
+### Make a copy of your private keys from id_rsa, id_ecdsa, id_ed25519, etc... into yourName.private or serverName.private
 $ cp ~/.ssh/id_rsa ~/.ssh/YourName.private
 
-# To Save SSH keys to USB Stick Drive (Plug-IN & Mount the Drive Now):
+### To Save SSH keys to USB Stick Drive (Plug-IN & Mount the Drive Now):
+
+
 Note: The USB Stick needs to be formated at this point...
+
 AS a paranoid option (if a new USB drive ONLY): Format (will erase all drives data so make sure that is desired and is correct DRIVE) the NEW USB stick as ext 4 LUKS password protected Volume [using Disks program in Ubuntu]- remember that PWD now forever!
+
 Give the Drive a Good Name (like SafeBox or something else cool that makes since to you).
+
+```
 cd into USB Drive via Open Terminal Here in nautilus or other File Manager or simply cd /media/$USER/USB_Drive_Volume_Name_HERE
 $ filecrypt -o ssh.enc -k ~/.config/filecrypt/tts.key ~/.ssh/*.Private
 Verify that the file is valid then move on to make a Symbolic link to it:
 $ filecrypt -t -v -k ~/.config/filecrypt/tts.key -u ssh.enc
 $ sudo ln -s /media/$USER/NAME_OF_USB_Drive_to_Mount/ssh.enc /mnt/ssh.enc
+```
 
-# Robert's Bash Scripts to mount USB keys into RAM Disk for .ssh Keys to work
+### Robert's Bash Scripts to mount USB keys into RAM Disk for .ssh Keys to work
 $ sudo cp shell_scripts/*.sh /usr/local/bin/
-# Okay, to make the mkeys work REPLACE Robs.private with your Private KEY file name
+### Okay, to make the mkeys work REPLACE Robs.private with your Private KEY file name
 $ ln -s /mnt/ramdisk/Robs.private ~/.ssh/
-# Update your ~/.ssh/config to use the .Private key file, as follows:
+### Update your ~/.ssh/config to use the .Private key file, as follows:
 $ nano ~/.ssh/config
 
 ```
@@ -145,8 +153,11 @@ Host MyServerName_HERE
 ```
 
 # Try it out now:
+
+```
 $ mkeys.sh
 $ ssh MyServerName_HERE
+```
 
 Here is how to Mount the USB keys Run (mkeys.sh) - here is it's contents:
 ```
