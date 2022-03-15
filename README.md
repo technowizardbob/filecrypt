@@ -108,9 +108,10 @@ Examples:
 ## INSTALL
 ```
 $ cd filecrypt
-$ build go
+$ go build
 $ sudo cp filecrypt /usr/local/bin/
 ### Generate a Key File for use with filecrypt passwords
+$ mkdir -p ~/.config/filecrypt
 $ filecrypt -g ~/.config/filecrypt/tts.key
 NOTE: if your key name or path is different then update the mkeys.sh Bash Script...
 ```
@@ -130,9 +131,10 @@ AS a paranoid option (if a new USB drive ONLY): Format (will erase all drives da
 Give the Drive a Good Name (like SafeBox or something else cool that makes since to you).
 
 ```
-cd into USB Drive via Open Terminal Here in nautilus or other File Manager or simply cd /media/$USER/USB_Drive_Volume_Name_HERE
+### cd into USB Drive via Open Terminal Here in nautilus or other File Manager or 
+### ... simply cd /media/$USER/USB_Drive_Volume_Name_HERE
 $ filecrypt -o ssh.enc -k ~/.config/filecrypt/tts.key ~/.ssh/*.Private
-Verify that the file is valid then move on to make a Symbolic link to it:
+### Verify that the file is valid then move on to make a Symbolic link to it:
 $ filecrypt -t -v -k ~/.config/filecrypt/tts.key -u ssh.enc
 $ sudo ln -s /media/$USER/NAME_OF_USB_Drive_to_Mount/ssh.enc /mnt/ssh.enc
 ```
