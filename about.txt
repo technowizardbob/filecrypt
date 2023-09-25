@@ -1,4 +1,4 @@
-I (Robert...) made some minnor tweaks to this program.
+I (Bob...) made some minnor tweaks to this program.
 1) To allow for a key file.
 2) To remove folder path info in TAR arachives (as it did not decode 100% of the time for me and was not how I wanted the folders to output anyways).
 

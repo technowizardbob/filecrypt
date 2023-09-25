@@ -139,7 +139,7 @@ $ filecrypt -t -v -k ~/.config/filecrypt/tts.key -u ssh.enc
 $ sudo ln -s /media/$USER/NAME_OF_USB_Drive_to_Mount/ssh.enc /mnt/ssh.enc
 ```
 
-### Robert's Bash Scripts to mount USB keys into RAM Disk for .ssh Keys to work
+### Bob's Bash Scripts to mount USB keys into RAM Disk for .ssh Keys to work
 $ sudo cp shell_scripts/*.sh /usr/local/bin/
 ### Okay, to make the mkeys work REPLACE Robs.private with your private KEY file name
 $ ln -s /mnt/ramdisk/Robs.private ~/.ssh/
@@ -187,7 +187,7 @@ Once, your sure everything worked by Testing it out, you may move your ~/.ssh .P
 
 ## ChangeLog
 
-I (Robert...) made minnor changes/Tweaks to this program, here they are:
+I (Bob...) made minnor changes/Tweaks to this program, here they are:
 1) To allow for a key file.
 2) To remove folder path info in TAR arachives (as it did not decode 100% of the time for me and was not how I wanted the folders to output anyways).
 
@@ -363,7 +363,7 @@ Here is my Diff Patch on FileCrypt.Go:
  	progName := filepath.Base(os.Args[0])
 -	fmt.Printf(`%s version %s, (c) 2015 Kyle Isom <kyle@tyrfingr.is>
 -Released under the ISC license.
-+	fmt.Printf(`%s version %s, (c) 2022 Robert Strutts
++	fmt.Printf(`%s version %s, (c) 2022 Bob S. <Tips@TechnoWizardBob.com>
  
  Usage:
 -%s [-h] [-o filename] [-q] [-t] [-u] [-v] [-x] files...
